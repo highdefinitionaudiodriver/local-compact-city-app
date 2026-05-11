@@ -1,0 +1,182 @@
+// Prisma schema for the Local Compact City civic proposal & e-signature app.
+// Note: SQLite does not support native enums, so enum-like fields are stored
+// as String and validated against constants in src/lib/constants.ts.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// User identity is derived from a hashed JPKI signing-certificate serial.
+// We never store the raw 12-digit My Number or the raw certificate serial.
+model User {
+  id             String     @id // sha256(certificate_serial) — opaque hashed_id
+  resident_code  String     // municipality code (e.g. "131016" for Chiyoda-ku)
+  display_name   String?
+  is_verified    Boolean    @default(true) // verified via JPKI mock at sign-in
+  created_at     DateTime   @default(now())
+
+  proposals      Proposal[] @relation("ProposalAuthor")
+  votes          Vote[]
+  comments       Comment[]
+
+  // NextAuth wiring
+  accounts       Account[]
+  sessions       Session[]
+
+  @@index([resident_code])
+}
+
+// type:   "IDEA"     -> lightweight community suggestion (for/against)
+// type:   "PETITION" -> formal e-signature campaign to the municipality
+// status: "OPEN" | "CLOSED" | "SUBMITTED"
+model Proposal {
+  id                String    @id @default(cuid())
+  title             String
+  content           String
+  type              String    // ProposalType
+  status            String    @default("OPEN") // ProposalStatus
+  target_signatures Int       @default(100)
+  deadline          DateTime?
+  resident_code     String    // municipality the proposal targets
+
+  author_id         String
+  author            User      @relation("ProposalAuthor", fields: [author_id], references: [id])
+
+  votes             Vote[]
+  comments          Comment[]
+  audit_logs        AuditLog[]
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+
+  @@index([type, status])
+  @@index([resident_code])
+}
+
+// Append-only ledger of every CSV/PDF export the system has issued.
+// On verification, we look up by `hmac` and use `payload_json` (the canonical
+// payload that was hashed at issuance time) to recompute the digest, so the
+// verifier never has to re-derive numbers from the rendered document body.
+model IssuanceRecord {
+  id              String   @id @default(cuid())
+  kind            String   // "CSV" | "PDF"
+  proposal_id     String
+  issuer_user_id  String   // hashed JPKI id of the staff who triggered the export
+  hmac            String   @unique // hex digest, lookup key
+  payload_json    String   // canonical input to the HMAC, used for re-verification
+  issued_at       DateTime @default(now())
+
+  @@index([proposal_id, issued_at])
+  @@index([issuer_user_id])
+}
+
+// Each time a file is checked on /admin/verify we append a record here. This
+// gives auditors visibility into who tried to verify what, and the outcome.
+model VerificationLog {
+  id                String   @id @default(cuid())
+  verifier_user_id  String   // hashed JPKI id of the staff running the check
+  kind              String   // "CSV" | "PDF" | "UNKNOWN"
+  result            String   // "OK" | "TAMPERED" | "UNKNOWN"
+  hmac              String?  // the digest that was found inside the file, if any
+  matched_issuance  String?  // FK-by-id (loose) to IssuanceRecord on success
+  file_name         String?
+  file_size         Int?
+  created_at        DateTime @default(now())
+
+  @@index([verifier_user_id, created_at])
+  @@index([result])
+}
+
+// Append-only audit trail of administrative status changes.
+// Records are NEVER updated or deleted by the application — combined with
+// strict server-side gating, this gives investigators a tamper-evident log.
+model AuditLog {
+  id            String   @id @default(cuid())
+  proposal_id   String
+  admin_user_id String   // hashed JPKI id of the staff who performed the change
+  old_status    String
+  new_status    String
+  created_at    DateTime @default(now())
+
+  proposal      Proposal @relation(fields: [proposal_id], references: [id], onDelete: Cascade)
+
+  @@index([proposal_id, created_at])
+  @@index([admin_user_id])
+}
+
+// Free-form discussion thread on a proposal. Author identity is the same
+// opaque JPKI hash used elsewhere; the UI never reveals it.
+model Comment {
+  id          String   @id @default(cuid())
+  text        String
+  proposal_id String
+  user_id     String
+  created_at  DateTime @default(now())
+
+  proposal    Proposal @relation(fields: [proposal_id], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([proposal_id, created_at])
+  @@index([user_id])
+}
+
+// One vote / signature per (proposal, user). Enforced at DB level.
+// vote_type: "FOR" | "AGAINST" (for IDEA) or "SIGN" (for PETITION).
+model Vote {
+  id          String   @id @default(cuid())
+  proposal_id String
+  user_id     String
+  vote_type   String
+  // Snapshot of signer's resident_code at the moment of signing — this is the
+  // legal evidence captured for petition submissions.
+  resident_code String
+  created_at  DateTime @default(now())
+
+  proposal    Proposal @relation(fields: [proposal_id], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([proposal_id, user_id])
+  @@index([proposal_id])
+  @@index([user_id])
+}
+
+// ---------- NextAuth.js v5 (Auth.js) tables ----------
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
