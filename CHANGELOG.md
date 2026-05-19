@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 文書編集に応じて瞬時に ✅/❌ が切り替わるビジュアルデモ
   - 本番 `EXPORT_HMAC_SECRET` ではなく固定 DEMO_SECRET 使用（自己完結）
   - 静的化 (`force-static`) で DB・認証なしでも動作
+- **prisma/seed.ts デモデータを 7 件 → 20 件に拡充**（デモ実演のリアリティ向上）
+  - 自治体: 千代田・盛岡・大阪・港 → 京都・福岡・札幌・仙台を追加（計 8 自治体）
+  - 提案ジャンル: 教育・交通・環境・福祉・防災・DX・文化 の 7 ジャンルを横断
+  - 各提案にリアル感ある架空タイトル・本文と適切な seedSignatures を設定
+  - 統計ダッシュボード（円グラフ・時系列）の見栄えが大幅に向上
 
 ## [0.1.0] - 2026-05-10
 

@@ -44,6 +44,27 @@ const AUTHORS: Record<string, SeedAuthor> = {
     display_name: "田中 次郎",
     resident_code: "131032",
   },
+  // ── 自治体追加: 提案多様性のため ─────────────────────────────────
+  kyoto: {
+    serial: "JPKI-MOCK-CERT-KYOTO-A-0007",
+    display_name: "中川 千夏",
+    resident_code: "261009",
+  },
+  fukuoka: {
+    serial: "JPKI-MOCK-CERT-FUKUOKA-A-0008",
+    display_name: "緒方 直人",
+    resident_code: "401307",
+  },
+  sapporo: {
+    serial: "JPKI-MOCK-CERT-SAPPORO-A-0009",
+    display_name: "宮原 和歌",
+    resident_code: "011002",
+  },
+  sendai: {
+    serial: "JPKI-MOCK-CERT-SENDAI-A-0010",
+    display_name: "三浦 健介",
+    resident_code: "041009",
+  },
 };
 
 type SeedProposal = {
@@ -137,6 +158,164 @@ const PROPOSALS: SeedProposal[] = [
       "通行量の多い六本木交差点で、夜間の視認性が低く歩行者事故が多発しています。\n発光型誘導サインや色分け塗装などのデザイン改善を提案します。",
     type: "IDEA",
     target_signatures: 0,
+  },
+
+  // ────────────────────────────────────────────────────────────────
+  //  追加：デモのリアル感向上のための提案群（合計 20 件に拡充）
+  //  教育・交通・環境・福祉・防災・DX・文化 の 7 ジャンルに横断
+  // ────────────────────────────────────────────────────────────────
+
+  // ── 千代田区 追加 ───────────────────────────────────────────────
+  {
+    id: "seed-chiyoda-wifi",
+    authorKey: "chiyoda",
+    resident_code: "131016",
+    title: "区内公衆無線LANの整備拡充を求める請願",
+    content:
+      "観光客のみならず、災害時の通信手段確保の観点からも、区内公共施設・主要交差点周辺の公衆無線LANの拡充は急務です。\n本請願は、設置箇所の年度別計画と予算配分を区議会で公開協議することを求めます。",
+    type: "PETITION",
+    target_signatures: 400,
+    seedSignatures: 168,
+  },
+  {
+    id: "seed-chiyoda-bus",
+    authorKey: "chiyoda",
+    resident_code: "131016",
+    title: "コミュニティバス「風ぐるま」のフリーパス制度提案",
+    content:
+      "区内コミュニティバスの利用促進と、高齢者・子育て世帯の移動支援を目的に、年間 6,000 円程度のフリーパス制度の導入を提案します。",
+    type: "IDEA",
+    target_signatures: 0,
+  },
+
+  // ── 盛岡市 追加 ─────────────────────────────────────────────────
+  {
+    id: "seed-morioka-startup",
+    authorKey: "morioka",
+    resident_code: "132012",
+    title: "中心市街地への学生創業支援センター誘致提案",
+    content:
+      "盛岡市の人口流出対策として、岩手大学・盛岡大学等の学生が起業しやすい環境整備が必要です。\n中心市街地の空き店舗を活用した創業支援センターの設置を提案します。",
+    type: "IDEA",
+    target_signatures: 0,
+  },
+  {
+    id: "seed-morioka-flood",
+    authorKey: "morioka",
+    resident_code: "132012",
+    title: "中津川・北上川流域の防災避難計画見直し請願",
+    content:
+      "近年の気候変動に伴う豪雨災害の頻発を踏まえ、中津川・北上川合流地点周辺の浸水想定区域と避難計画の全面見直しを求めます。\n特に高齢者世帯への個別避難計画 (個別避難計画) の策定支援を要望します。",
+    type: "PETITION",
+    target_signatures: 400,
+    seedSignatures: 245,
+  },
+
+  // ── 大阪市 追加 ─────────────────────────────────────────────────
+  {
+    id: "seed-osaka-bike",
+    authorKey: "osaka",
+    resident_code: "271004",
+    title: "御堂筋の自転車専用道整備に関する請願",
+    content:
+      "大阪都心部の脱炭素・健康増進のため、御堂筋全長にわたる物理分離型の自転車専用道の整備を求めます。\n商店街への配慮として、夜間時間帯の貨物用車線との共用も併せて検討対象とします。",
+    type: "PETITION",
+    target_signatures: 800,
+    seedSignatures: 522,
+  },
+  {
+    id: "seed-osaka-aitranslate",
+    authorKey: "osaka",
+    resident_code: "271004",
+    title: "AI 翻訳機の観光案内所への配備提案",
+    content:
+      "大阪万博後のインバウンド観光継続を見据え、主要観光案内所への音声 AI 翻訳機の配備を提案します。多言語対応スタッフの人件費削減と観光客満足度向上を両立できます。",
+    type: "IDEA",
+    target_signatures: 0,
+  },
+
+  // ── 港区 追加 ───────────────────────────────────────────────────
+  {
+    id: "seed-minato-kodomo",
+    authorKey: "minato",
+    resident_code: "131032",
+    title: "子ども食堂への財政支援拡充を求める請願",
+    content:
+      "区内の子ども食堂運営団体への安定的な財政支援の制度化を求めます。\n単年度補助ではなく、3 年度ごとの中期計画として位置づけることで、運営団体の人材確保・場所確保を可能にします。",
+    type: "PETITION",
+    target_signatures: 500,
+    seedSignatures: 312,
+  },
+
+  // ── 京都市 ─────────────────────────────────────────────────────
+  {
+    id: "seed-kyoto-minpaku",
+    authorKey: "kyoto",
+    resident_code: "261009",
+    title: "観光地周辺の民泊規制強化を求める請願",
+    content:
+      "オーバーツーリズム問題の深刻化を受け、清水寺・祇園・嵐山等の主要観光地周辺における民泊施設の新規認可基準の引き上げ、騒音・ゴミ問題への近隣住民通報窓口の整備を求めます。",
+    type: "PETITION",
+    target_signatures: 1000,
+    seedSignatures: 738,
+  },
+  {
+    id: "seed-kyoto-bunkazai",
+    authorKey: "kyoto",
+    resident_code: "261009",
+    title: "文化財公開施設での多言語ガイド整備提案",
+    content:
+      "重要文化財・世界遺産を含む公開施設に、QR コード経由でアクセスできる多言語ガイド (音声・テキスト) の標準整備を提案します。京都市が標準仕様を策定し、各施設の負担を最小化します。",
+    type: "IDEA",
+    target_signatures: 0,
+  },
+
+  // ── 福岡市 ─────────────────────────────────────────────────────
+  {
+    id: "seed-fukuoka-yatai",
+    authorKey: "fukuoka",
+    resident_code: "401307",
+    title: "屋台文化保全条例の制定を求める請願",
+    content:
+      "福岡の屋台文化を将来世代に継承するため、屋台営業者の世代交代支援、立地・衛生基準の明文化、新規参入の枠組み整備を含む条例の制定を求めます。",
+    type: "PETITION",
+    target_signatures: 600,
+    seedSignatures: 419,
+  },
+  {
+    id: "seed-fukuoka-startup",
+    authorKey: "fukuoka",
+    resident_code: "401307",
+    title: "スタートアップ向け公共施設の夜間開放提案",
+    content:
+      "天神ビッグバン後の起業エコシステム強化のため、市役所・図書館・公民館等の一部スペースを 22 時まで開放し、共創スペースとして活用する提案です。",
+    type: "IDEA",
+    target_signatures: 0,
+  },
+
+  // ── 札幌市 ─────────────────────────────────────────────────────
+  {
+    id: "seed-sapporo-carnival",
+    authorKey: "sapporo",
+    resident_code: "011002",
+    title: "ホワイトイルミネーション期間延長と中規模イベント復活提案",
+    content:
+      "観光閑散期の冬季対策として、ホワイトイルミネーションの期間を 1 月末まで延長し、中規模の屋外イベント (旧ホワイトカーニバル相当) を復活させる提案です。地下街・商店街への経済効果が期待されます。",
+    type: "IDEA",
+    target_signatures: 0,
+  },
+
+  // ── 仙台市 ─────────────────────────────────────────────────────
+  {
+    id: "seed-sendai-chuodori",
+    authorKey: "sendai",
+    resident_code: "041009",
+    title: "中央通り再整備計画の住民説明会開催を求める請願",
+    content:
+      "仙台市中央通り再整備計画は、地元商店街・通勤者・観光客に大きな影響を与えるにもかかわらず、住民への説明機会が限定的です。\n各地区での説明会開催と、設計案へのフィードバック反映プロセスの公開を求めます。",
+    type: "PETITION",
+    target_signatures: 700,
+    seedSignatures: 488,
   },
 ];
 
