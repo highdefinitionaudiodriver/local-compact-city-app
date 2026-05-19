@@ -22,6 +22,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 提案ジャンル: 教育・交通・環境・福祉・防災・DX・文化 の 7 ジャンルを横断
   - 各提案にリアル感ある架空タイトル・本文と適切な seedSignatures を設定
   - 統計ダッシュボード（円グラフ・時系列）の見栄えが大幅に向上
+- **src/lib/jpki-bridge.ts** — JPKI mock/real 切替アダプタ
+  - 環境変数 `JPKI_MODE=mock|real` で振る舞い切替
+  - real モードは jpki-web の HTTP API (127.0.0.1:8000) を叩く設計
+  - PIN は jpki-web 側で取得・即破棄 — 本サーバを経由しない
+  - 既存 jpki-mock の呼び出し側は無変更で並存可能
+- **docs/JPKI_INTEGRATION.md** — モック→本番接続の切替ガイド
+  - jpki-web 側の追加実装契約（`/api/read-certificate` API）を明文化
+  - 自治体提案時の説得材料（「環境変数 1 行で切替・コード変更不要」）
 
 ## [0.1.0] - 2026-05-10
 
