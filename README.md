@@ -83,6 +83,8 @@ API
 git clone <repo>
 cd local-compact-city-app
 npm install
+Copy-Item .env.example .env
+npm run check:env
 npx prisma migrate dev   # SQLite DB 初期化
 npm run db:seed          # シードデータ投入（提案 3 + モック署名 480 件）
 
@@ -98,9 +100,12 @@ DATABASE_URL="file:./dev.db"
 AUTH_SECRET="<32 バイトの base64 ランダム文字列>"
 AUTH_TRUST_HOST="true"
 EXPORT_HMAC_SECRET="<エクスポート HMAC 用シークレット>"
+JPKI_MODE="mock"
+JPKI_WEB_ENDPOINT="http://127.0.0.1:8000"
 ```
 
 `AUTH_SECRET` と `EXPORT_HMAC_SECRET` は `openssl rand -base64 32` 等で個別に生成してください。
+設定後に `npm run check:env` を実行すると、デモ起動前に必須環境変数と JPKI/xID 設定の不足を確認できます。
 
 ---
 
