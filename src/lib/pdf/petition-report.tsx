@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
 import path from "node:path";
 import {
   Document,

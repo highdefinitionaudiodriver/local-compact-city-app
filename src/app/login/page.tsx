@@ -100,6 +100,9 @@ export default async function LoginPage({
         </CardHeader>
         <CardContent>
           {xidEnabled ? (
+            // OAuth サインイン用 API ルート。next/link ではなく実ナビゲーションが
+            // 必要（サーバ側で IdP へ 302 リダイレクトするため）。
+            // eslint-disable-next-line @next/next/no-html-link-for-pages
             <a
               href="/api/auth/signin/xid"
               className="inline-flex h-10 w-full items-center justify-center rounded-md bg-emerald-600 px-4 text-sm font-medium text-white shadow-sm hover:bg-emerald-700 transition-colors"

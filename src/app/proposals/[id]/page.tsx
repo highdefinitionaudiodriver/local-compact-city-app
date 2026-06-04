@@ -51,6 +51,9 @@ export default async function ProposalDetailPage({
       ? Math.min(100, Math.round((counts.SIGN / proposal.target_signatures) * 100))
       : 0;
   const alreadyVoted = !!myUserId && proposal.votes.some((v) => v.user_id === myUserId);
+  // force-dynamic な非同期サーバーコンポーネント。リクエスト時刻で締切判定するのは
+  // 正当（クライアントの再レンダリングは発生しない）。
+  // eslint-disable-next-line react-hooks/purity
   const expired = !!proposal.deadline && proposal.deadline.getTime() < Date.now();
 
   return (

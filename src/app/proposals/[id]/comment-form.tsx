@@ -13,9 +13,12 @@ export function CommentForm({ proposalId }: { proposalId: string }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [text, setText] = useState("");
 
-  // Clear the textarea after a successful post.
+  // Clear the textarea after a successful post. Resetting controlled state in
+  // response to a server-action result is React's documented pattern here; the
+  // new react-hooks lint rule is stricter than that guidance.
   useEffect(() => {
     if (state.ok) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setText("");
       formRef.current?.reset();
     }

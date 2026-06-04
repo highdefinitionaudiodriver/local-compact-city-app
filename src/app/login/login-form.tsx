@@ -61,6 +61,9 @@ export function LoginForm({ personas }: { personas: PersonaPublic[] }) {
   // that authentication succeeded before the screen changes.
   useEffect(() => {
     if (stage !== "reading") return;
+    // カードリーダー演出の進捗をリセットしてからタイマー列を開始する。
+    // 「reading フェーズ開始時に一度だけ」走る意図的な同期初期化。
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCompletedSteps(0);
     const timers: ReturnType<typeof setTimeout>[] = [];
     READER_STEPS.forEach((step, idx) => {

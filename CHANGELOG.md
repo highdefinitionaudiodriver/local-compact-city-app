@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- ESLint エラー/警告を解消（`npm run lint` がグリーンに）
+  - `src/lib/pdf/brochure-report.tsx`: `style?: any` を `Style | Style[]`（@react-pdf/types）に修正
+  - `brochure-report.tsx` / `petition-report.tsx` / `prisma.ts` の不要になった eslint-disable ディレクティブを削除
+  - 新しい `react-hooks`(v6) / `@next/next` ルールが正当なパターンを誤検知する3箇所（OAuth サインイン API ルートへの実ナビゲーション `<a>`、リーダー演出の effect 内同期初期化、`force-dynamic` サーバーコンポーネントでのリクエスト時刻判定）に、理由コメント付きの局所 disable を付与
+
 ### Added
+- 署名ヘルパー `src/lib/hmac.ts`（CSV/PDF エクスポートの HMAC-SHA256 署名）の単体テスト `tests/hmac.test.ts`（11ケース）。参照ダイジェスト一致、決定性、`canonicalize` の再帰キーソート、`safeEqualHex` の定数時間比較などを検証。`npm test`（`node --test tests/*.test.ts`、Node 24 ネイティブ TS 実行）を追加
 - README に「これは何？（30秒で）」「想定ユースケース・価格帯」セクションを追加（自治体・議員向け提案の判断材料）
 - SECURITY.md を追加（脆弱性報告フロー）
 - 商用利用・カスタマイズ依頼の連絡先を README 末尾に明記

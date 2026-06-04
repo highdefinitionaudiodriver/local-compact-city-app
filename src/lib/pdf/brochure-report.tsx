@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
 import path from "node:path";
 import {
   Document,
@@ -8,6 +7,7 @@ import {
   StyleSheet,
   Font,
 } from "@react-pdf/renderer";
+import type { Style } from "@react-pdf/types";
 
 // Register Japanese Font
 const FONT_PATH = path.join(
@@ -25,7 +25,7 @@ Font.register({
 Font.registerHyphenationCallback((word) => [word]);
 
 // Helper component to fix react-pdf line wrapping issues for CJK
-function Jp({ children, style }: { children: string; style?: any }) {
+function Jp({ children, style }: { children: string; style?: Style | Style[] }) {
   const isCjk = (c: string) => /[　-鿿＀-￯]/.test(c);
   const tokens: string[] = [];
   let buf = "";
