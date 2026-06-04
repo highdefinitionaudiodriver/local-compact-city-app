@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-06-04
+
 ### Fixed
 - ESLint エラー/警告を解消（`npm run lint` がグリーンに）
   - `src/lib/pdf/brochure-report.tsx`: `style?: any` を `Style | Style[]`（@react-pdf/types）に修正
